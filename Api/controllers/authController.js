@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { CustomError } = require("../middlewares/error");
+const { CustomError, erroHandler } = require("../middlewares/error");
 
 const registerController = async (req, res, next) => {
   try {
@@ -63,10 +63,34 @@ const loginController = async (req, res, next) => {
 const logoutController = async (req, res, next) => {
   //logout can only happen when we remove the coockies from the user browser
   try {
-  } catch (error) {}
+    res
+      .clearCookie("token", { sameSite: "none", secure: true })
+      .status(200)
+      .json("User logged out successfully");
+  } catch (error) {
+    next(error);
+  }
 };
 
-const refetchController = async (req, res, next) => {};
+const refetchController = async (req, res, next) => {
+  const token = req.cookies.token;
+
+  jwt.verify(token, process.env.JWT_SECRET, {}, async (err, data) => {
+    if (err) {
+      throw new CustomError(err, 404);
+    }
+    try {
+      //data is coming from the destructured user from the data base look up at the login
+
+      const id = data._id;
+      const user = await User.findOne({ _id: id });
+
+      return res.status(200).json(user);
+    } catch (error) {
+      next(error);
+    }
+  });
+};
 
 module.exports = {
   registerController,
