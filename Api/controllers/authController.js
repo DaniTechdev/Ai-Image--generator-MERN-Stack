@@ -20,7 +20,11 @@ const registerController = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hashSync(password, salt);
 
-    const newUser = new User({ ...req.body, password: hashedPassword });
+    const newUser = new User({
+      ...req.body,
+      password: hashedPassword,
+      email: email,
+    });
 
     const savedUser = await newUser.save();
 
@@ -40,6 +44,8 @@ const loginController = async (req, res, next) => {
       user = User.findOne({ username: req.body.username });
     }
 
+    console.log("user", user);
+
     if (!user) {
       throw new CustomError("user not found", 404);
     }
@@ -50,6 +56,7 @@ const loginController = async (req, res, next) => {
       throw new CustomError("Wrong Credentials!", 401);
     }
 
+    //lets destructure the user document and return user data excludimg the password throw token
     const { password, ...data } = user._doc;
 
     const token = jwt.sign({ _id: user._id }, process.env.JWT_EXPIRE);
@@ -73,6 +80,11 @@ const logoutController = async (req, res, next) => {
 };
 
 const refetchController = async (req, res, next) => {
+  //note the browser will  automatically send the token in the cookie through request,
+  //  so we need to get it from the cookie
+  //like this
+  //const token = jwt.sign({ _id: user._id }, process.env.JWT_EXPIRE);
+
   const token = req.cookies.token;
 
   jwt.verify(token, process.env.JWT_SECRET, {}, async (err, data) => {
@@ -80,7 +92,9 @@ const refetchController = async (req, res, next) => {
       throw new CustomError(err, 404);
     }
     try {
-      //data is coming from the destructured user from the data base look up at the login
+      //data is coming from the process token from the gotten frm the browswer req
+      //.cookie.token and when we set the token, we actuallyn saved the userId(_id)
+      //in the object we passed in
 
       const id = data._id;
       const user = await User.findOne({ _id: id });

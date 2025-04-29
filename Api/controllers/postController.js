@@ -7,6 +7,7 @@ const path = require("path");
 const Post = require("../models/Post");
 const User = require("../models/User");
 const { CustomError } = require("../middlewares/error");
+const { default: OpenAI } = require("openai");
 
 const generateFileName = (userId, allPostsLength) => {
   const date = new Date().toDateString().replace(/:/g, "-"); //global flag in replacement
@@ -14,6 +15,12 @@ const generateFileName = (userId, allPostsLength) => {
   return `${userId}-${allPostsLength}-${date}.png`;
 };
 
+//this will generate name dynamically for eaach of the files of the post
+const generateFileNameMultiple = (userId, index) => {
+  const date = new Date().toDateString().replace(/:/g, "-"); //global flag in replacement
+
+  return `${userId}-${index}-${date}.png`;
+};
 const createPostWithImagesController_V2 = async (req, res, next) => {
   const { userId } = req.params;
 
@@ -27,10 +34,11 @@ const createPostWithImagesController_V2 = async (req, res, next) => {
 
     //version 2 genrates multiple images so we have to map through them and then save in our file system
 
-    const downloadAndConvert = await Promise.all(
+    const downloadAndConvertImages = await Promise.all(
       imageUrls.map(async (imageUrl, index) => {
-        const fileName = generateFileName(userId, index);
+        const fileName = generateFileNameMultiple(userId, index);
         const filePath = path.join(__dirname, "../..", "uploads", fileName);
+
         const response = await axios({
           url: imageUrl,
           responseType: "arraybuffer",
@@ -54,10 +62,11 @@ const createPostWithImagesController_V2 = async (req, res, next) => {
       negativePrompt: negativePrompt,
       revisedPrompt: "Not available in Ai Image Art Dall-e-v2",
       size: 1,
-      quality: "HD",
-      style: style,
-      images: fileName,
-      aiImage: imageUrl,
+      quality: "Normal",
+      quantity: n,
+      style: "Normal",
+      images: downloadAndConvertImages,
+      aiImage: imageUrls,
     });
 
     await newPost.save();
@@ -70,13 +79,6 @@ const createPostWithImagesController_V2 = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-};
-
-//this will generate name dynamically for eaach of the files of the post
-const generateFileNameMultiple = (userId, index) => {
-  const date = new Date().toDateString().replace(/:/g, "-"); //global flag in replacement
-
-  return `${userId}-${index}-${date}.png`;
 };
 
 const createPostWithImagesController_V3 = async (req, res, next) => {
@@ -135,25 +137,167 @@ const createPostWithImagesController_V3 = async (req, res, next) => {
   }
 };
 
-const getPostController = async (req, res, next) => {};
+const getAllPostController = async (req, res, next) => {
+  try {
+    const allPosts = await Post.find();
+    // const allPosts = await Post.find().populate({
+    //   path: "user",
+    //   select: "username ",
+    // });
 
-const getSinglePostController = async (req, res, next) => {};
+    res.status(200).json({ posts: allPosts });
+  } catch (error) {
+    next(error);
+  }
+};
 
-const getUserPostsController = async (req, res, next) => {};
+const getSinglePostController = async (req, res, next) => {
+  try {
+    //destructure the id from the params
+    const { postId } = req.params;
 
-const deletePostController = async (req, res, next) => {};
+    //find the post by id and populate the user field with username
+    const post = await Post.findById(postId);
 
-const likePostController = async (req, res, next) => {};
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
 
-const disLikePostController = async (req, res, next) => {};
+    const returnedPost = await Post.findById(postId).populate({
+      path: "user",
+      select: "username",
+    });
+    res.status(200).json({ returnedPost });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getUserPostsController = async (req, res, next) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      throw new CustomError("User not found");
+    }
+
+    // const post = await Post.find({ user: userId }).populate("user", "username");
+    const userPosts = await Post.find({ user: userId }).populate({
+      path: user,
+      select: username,
+    });
+
+    res.status(200).json({ posts: userPosts });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deletePostController = async (req, res, next) => {
+  const { postId } = req.params;
+
+  try {
+    //check if the post to exist in the all posts and finding a particulaarId
+    const postToDelete = await Post.findById(postId);
+
+    if (!postToDelete) {
+      throw new CustomError("Post not found");
+    }
+
+    //since any post has a reference to the creator by user:Id
+    //we will find the post , then check if it is the user that created ,it and then delete that particular one using filering
+
+    const user = await User.findById(postToDelete.user);
+
+    if (!user) {
+      throw new CustomError("Post not found");
+    }
+
+    user.posts = user.posts.filter(
+      (postId) => postId.toString() !== postToDelete._id
+    );
+
+    //after filering  from the user, we can save and then delete the post generally from the Post fields
+
+    await user.save();
+
+    await postToDelete.deleteOne();
+
+    res.status(200).json({ message: "Post deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const likePostController = async (req, res, next) => {
+  const { postId } = req.params;
+  const { userId } = req.body;
+
+  try {
+    const post = Post.findById(postId);
+    if (!post) {
+      throw new CustomError("post not found", 404);
+    }
+
+    const user = User.findById(userId);
+
+    if (!user) {
+      throw new CustomError("user now found", 404);
+    }
+
+    if (post.likes.includes(userId)) {
+      throw new CustomError("You have already like this post", 404);
+    }
+
+    await Post.likes.push(userId);
+
+    await post.save();
+
+    res.statu(200).json({ message: "Post liked succesfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const disLikePostController = async (req, res, next) => {
+  const { postId } = req.params;
+  const { userId } = req.body;
+
+  try {
+    const post = Post.findById(postId);
+    if (!post) {
+      throw new CustomError("post not found", 404);
+    }
+
+    const user = User.findById(userId);
+
+    if (!user) {
+      throw new CustomError("user now found", 404);
+    }
+
+    if (post.likes.includes(userId)) {
+      throw new CustomError("You have already like this post", 404);
+    }
+
+    post.likes = post.like.filter((id) => id.toString() !== postId);
+
+    await post.save();
+
+    res.statu(200).json({ message: "Post disliked succesfully" });
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   createPostWithImagesController_V2,
   createPostWithImagesController_V3,
-  getPostController,
   getSinglePostController,
   getUserPostsController,
   deletePostController,
   likePostController,
   disLikePostController,
+  getAllPostController,
 };
