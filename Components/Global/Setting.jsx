@@ -1,6 +1,6 @@
 import React from "react";
 
-const Setting = () => {
+const Setting = ({ activeUser }) => {
   return <div>Setting</div>;
 };
 

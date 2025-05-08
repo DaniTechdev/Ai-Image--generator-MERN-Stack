@@ -191,13 +191,13 @@ export const IMAGE_GENERATOR_V3 = async (promptv3) => {
   }
 };
 
-export const IMAGE_GENERATOR_V2 = async (promptv3) => {
+export const IMAGE_GENERATOR_V2 = async (promptv2) => {
   //to get the user information I will use Check_auth function because
   //the user id is in the cooker we sent to the front-end(brower)
 
   const currentUser = await CHECK_AUTH();
 
-  const { prompt, negativePrompt, size, n } = promptv3;
+  const { prompt, negativePrompt, size, n } = promptv2;
 
   if (!prompt || !negativePrompt || !size || !n) {
     return "Data is missing";
