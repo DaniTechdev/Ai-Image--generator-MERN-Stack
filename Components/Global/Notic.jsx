@@ -67,7 +67,7 @@ const Notic = () => {
               }}
             >
               <div className="select-none">
-                {AI_MODEL.map((model, index) => {
+                {AI_MODEL.map((model, index) => (
                   <div
                     key={model}
                     onClick={() => changeModel(model)}
@@ -77,15 +77,35 @@ const Notic = () => {
                   >
                     <span>{model}</span>
                     {aiModel == model && (
-                      <span className="w-6 left-0 absolute"></span>
+                      <span className="w-6 left-0 absolute">
+                        <Tick />
+                      </span>
                     )}
-                  </div>;
-                })}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
       )}
+
+      <div className={"w-full flex flex-col items-center"}>
+        <div className="w-full px-3 pt-3 flex space-x-1 items-center justify-center pr-12">
+          <button
+            className="flex cursor-pointer select-none hover:bg-opacity-50 pl-3 pr-3 pr-2.5 py-2 
+          items-center justify-center space-x-1.5 rounded focus:outline-none text-xs text-zinc-200  "
+            type="button"
+            onClick={() =>
+              openNotic ? setOpenNotic(false) : setOpenNotic(true)
+            }
+          >
+            <span style={{ pointerEvents: "none" }}>{activeModel}</span>
+            <span aria-hidden="true">
+              <ArrowDown />
+            </span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

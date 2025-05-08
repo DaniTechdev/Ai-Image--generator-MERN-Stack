@@ -62,11 +62,12 @@ const Header = () => {
       setAuth(false);
     }
   }, []);
+
   return (
     <div
       className="fixed w-screen bottom-0 sm:top-0 z-50 flex flex-row items-center 
-    justify-between backdrop-blur bg-opacity-80 border-t sm:border-t-0 sm:border-b border-opacity-50 
-    text-sm select-none bg-zinc-900 border-t-zinc-700 sm:border-b-zinc-700"
+       justify-between backdrop-blur bg-opacity-80 border-t sm:border-t-0 sm:border-b border-opacity-50 
+       text-sm select-none bg-zinc-900 border-t-zinc-700 sm:border-b-zinc-700"
       style={{
         height: 56,
       }}
@@ -129,32 +130,32 @@ const Header = () => {
         ))}
       </div>
 
-        {auth ? (
-          <div className="hidden w-32 h-full sm:flex items-center justify-end mr-6 ">
-            <button
-              className="h-7 w-7 rounded-full text-xs md:text-sm bg-zinc-800 border border-zinc-700
+      {auth ? (
+        <div className="hidden w-32 h-full sm:flex items-center justify-end mr-6 ">
+          <button
+            className="h-7 w-7 rounded-full text-xs md:text-sm bg-zinc-800 border border-zinc-700
             drop-shadow flex items-center justify-center opacity-80 hover:opacity-100"
-              type="button"
-              onClick={() =>
-                openSetting ? setOpenSetting(false) : setOpenSetting(true)
-              }
-            >
-              {activeUser?.username.slice(0, 1).toUpperCase()}
-            </button>
-            {openSetting && <Setting activeUser={activeUser} />}
-          </div>
-        ) : (
-          <div className="hidden w-32 h-full sm:flex items-center justify-end  mr-6">
-            <a
-              href="/login"
-              className="flex items-center justify-center h-8 rounded-md opacity-90 
+            type="button"
+            onClick={() =>
+              openSetting ? setOpenSetting(false) : setOpenSetting(true)
+            }
+          >
+            {activeUser?.username.slice(0, 1).toUpperCase()}
+          </button>
+          {openSetting && <Setting activeUser={activeUser} />}
+        </div>
+      ) : (
+        <div className="hidden w-32 h-full sm:flex items-center justify-end  mr-6">
+          <a
+            href="/login"
+            className="flex items-center justify-center h-8 rounded-md opacity-90 
             hover:brightness-100 px-4 text-xs md:text-sm bg-gradient-to-t from-indigo-800 via-indigo-800 to-indigo-600 
             drop-shadow font-medium whitespace-nowrap"
-            >
-              Get Started
-            </a>
-          </div>
-        )}
+          >
+            Get Started
+          </a>
+        </div>
+      )}
     </div>
   );
 };
