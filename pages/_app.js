@@ -30,7 +30,7 @@ export default function App({ Component, pageProps }) {
         />
         <link rel="shortcut" href="/assets/ailogo.png" />
       </Head>
-      <div>{auth && <Auth />}</div>
+      {auth && <Auth />}
 
       <Component {...pageProps} />
     </>
