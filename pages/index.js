@@ -84,7 +84,7 @@ const index = () => {
         setCategory("YouTube");
       }
     } else {
-      if (category == "REEL") {
+      if (category == "Reel") {
         setAllAIImages(V3_1024x1792);
         setAllPostCopy(V3_1024x1792);
         setCategory("Reel");
@@ -301,8 +301,8 @@ const index = () => {
 
               <Button
                 icon={<AiOutlineYoutube />}
-                name={"Youtube"}
-                handleClick={() => changeCategory("Youtube")}
+                name={"YouTube"}
+                handleClick={() => changeCategory("YouTube")}
                 category={category}
               />
 
