@@ -13,7 +13,7 @@ export default function App({ Component, pageProps }) {
   useEffect(() => {
     const storedCookiedValue = Cookies.get("token");
 
-    if (storedCookiedValue) {
+    if (!storedCookiedValue) {
       setAuth(true);
     } else {
       setAuth(false);
@@ -28,9 +28,10 @@ export default function App({ Component, pageProps }) {
           name="description"
           content="Ai image Art Generator Powered By Natochi Tech"
         />
-        <link rel="shortcut" href="/assets/ailogi.png" />
+        <link rel="shortcut" href="/assets/ailogo.png" />
       </Head>
-      {auth && <Auth />}
+      <div>{auth && <Auth />}</div>
+
       <Component {...pageProps} />
     </>
   );
