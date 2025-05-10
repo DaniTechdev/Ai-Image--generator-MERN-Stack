@@ -12,6 +12,7 @@ export default function App({ Component, pageProps }) {
 
   useEffect(() => {
     const storedCookiedValue = Cookies.get("token");
+    // console.log("storedCookiedValue", storedCookiedValue);
 
     if (!storedCookiedValue) {
       setAuth(true);

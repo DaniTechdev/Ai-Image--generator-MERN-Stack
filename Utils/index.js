@@ -17,6 +17,8 @@ function extratImaageUrls(imageArray) {
 }
 
 export const REGISTER_USER = async (signUp) => {
+  console.log("signup backened", signUp);
+
   const { name, email, password, confirmPassword } = signUp;
 
   if (!name || !email || !password || !confirmPassword) {
@@ -35,16 +37,20 @@ export const REGISTER_USER = async (signUp) => {
       username: name,
       email: email,
       password: password,
-      confirmPassword: confirmPassword,
+      // confirmPassword: confirmPassword,
     },
   });
 
-  if (response.status == 200) {
+  console.log("register response", response);
+
+  if (response.status == 201) {
     window.location.href = "/";
   }
 };
 
 export const LOGIN_USER = async (login) => {
+  console.log("login backened", login);
+
   const { email, password } = login;
 
   if (!email || !password) {
@@ -54,6 +60,7 @@ export const LOGIN_USER = async (login) => {
   const response = await axios({
     method: "POST",
     url: "/api/auth/login",
+
     withCredentials: true,
     data: {
       email: email,
@@ -62,6 +69,7 @@ export const LOGIN_USER = async (login) => {
   });
 
   if (response.status == 200) {
+    console.log("login response from context", response);
     window.location.href = "/";
   }
 };

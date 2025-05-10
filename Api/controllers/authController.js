@@ -36,18 +36,16 @@ const registerController = async (req, res, next) => {
 };
 
 const loginController = async (req, res, next) => {
+  console.log("login controller user", req.body);
+
   try {
     let user;
     if (req.body.email) {
-      user = User.findOne({ email: req.body.email });
+      user = await User.findOne({ email: req.body.email });
+      // console.log("user on controller inside", user);
     } else {
-      user = User.findOne({ username: req.body.username });
-    }
-
-    console.log("user", user);
-
-    if (!user) {
-      throw new CustomError("user not found", 404);
+      user = await User.findOne({ username: req.body.username });
+      // console.log("user on controller inside", user);
     }
 
     const match = await bcrypt.compare(req.body.password, user.password);
@@ -61,7 +59,9 @@ const loginController = async (req, res, next) => {
 
     const token = jwt.sign({ _id: user._id }, process.env.JWT_EXPIRE);
 
-    res.cookie("token", token.status(200).json(data));
+    // res.cookie("token", token.status(200).json(data));
+
+    res.cookie("token", token).status(200).json(data);
   } catch (error) {
     next(error);
   }

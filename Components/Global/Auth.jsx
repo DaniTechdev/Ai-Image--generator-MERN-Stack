@@ -13,12 +13,15 @@ const Auth = () => {
     password: "",
   });
 
+  console.log("login", login);
   const [signUp, setSignUp] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+
+  // console.log("SignUp", signUp);
 
   const CALLING_REGISTER_USER = async () => {
     try {
@@ -40,6 +43,8 @@ const Auth = () => {
     try {
       setLoader(true);
       const response = await LOGIN_USER(login);
+
+      console.log("login response from from end", response);
 
       if (response) {
         setLoader(false);
@@ -156,6 +161,7 @@ const Auth = () => {
                   handleChange={(e) =>
                     setSignUp({ ...signUp, password: e.target.value })
                   }
+                  styleCss="1rem"
                 />
                 <Input
                   placeholder={"Confirm Passsword"}
@@ -163,6 +169,7 @@ const Auth = () => {
                   handleChange={(e) =>
                     setSignUp({ ...signUp, confirmPassword: e.target.value })
                   }
+                  styleCss="1rem"
                 />
                 <button
                   onClick={() => CALLING_REGISTER_USER(signUp)}
@@ -171,7 +178,7 @@ const Auth = () => {
                     rounded-lg shadow h-9 w-64 drop-shadow flex items-center
                     justify-center mt-3"
                 >
-                  Signup{loader && <Loader />}
+                  SignUp{loader && <Loader />}
                 </button>
                 {error && (
                   <p
