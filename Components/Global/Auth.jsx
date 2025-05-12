@@ -13,7 +13,7 @@ const Auth = () => {
     password: "",
   });
 
-  console.log("login", login);
+  // console.log("login", login);
   const [signUp, setSignUp] = useState({
     name: "",
     email: "",

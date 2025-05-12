@@ -42,9 +42,16 @@ const loginController = async (req, res, next) => {
     let user;
     if (req.body.email) {
       user = await User.findOne({ email: req.body.email });
+      if (!user) {
+        throw new CustomError("User not found!", 404);
+      }
       // console.log("user on controller inside", user);
     } else {
       user = await User.findOne({ username: req.body.username });
+      if (!user) {
+        throw new CustomError("User not found!", 404);
+        throw new CustomError("Username or email already exists", 400);
+      }
       // console.log("user on controller inside", user);
     }
 
@@ -57,9 +64,17 @@ const loginController = async (req, res, next) => {
     //lets destructure the user document and return user data excludimg the password throw token
     const { password, ...data } = user._doc;
 
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_EXPIRE);
+    // const token = jwt.sign({ _id: user._id }, process.env.JWT_EXPIRE);
+    const token = jwt.sign(
+      { _id: user._id },
+      process.env.JWT_SECRET, // ← This must match your verification secret
+      { expiresIn: process.env.JWT_EXPIRE } // Use expire for token lifetime
+    );
 
     // res.cookie("token", token.status(200).json(data));
+
+    // console.log("token from server login", token);
+    // console.log("data from server login", data);
 
     res.cookie("token", token).status(200).json(data);
   } catch (error) {
@@ -87,6 +102,9 @@ const refetchController = async (req, res, next) => {
 
   const token = req.cookies.token;
 
+  // console.log("Current JWT_SECRET:", process.env.JWT_SECRET);
+  // console.log("Current JWT_EXPIRE:", process.env.JWT_EXPIRE);
+
   jwt.verify(token, process.env.JWT_SECRET, {}, async (err, data) => {
     if (err) {
       throw new CustomError(err, 404);
@@ -105,6 +123,53 @@ const refetchController = async (req, res, next) => {
     }
   });
 };
+
+// const refetchController = async (req, res, next) => {
+//   const token = req.cookies.token;
+
+//   if (!token) {
+//     return res
+//       .status(401)
+//       .json({ success: false, message: "No token provided" });
+//   }
+
+//   try {
+//     const decoded = await new Promise((resolve, reject) => {
+//       jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+//         if (err) {
+//           console.error("JWT Verification Error:", err.name, err.message);
+//           reject(err);
+//         } else {
+//           resolve(decoded);
+//         }
+//       });
+//     });
+
+//     const user = await User.findById(decoded._id).select("-password");
+//     if (!user) {
+//       return res
+//         .status(404)
+//         .json({ success: false, message: "User not found" });
+//     }
+
+//     return res.status(200).json({ success: true, user });
+//   } catch (err) {
+//     console.error("Refetch Error:", err);
+
+//     let status = 500;
+//     let message = "Authentication failed";
+
+//     if (err.name === "TokenExpiredError") {
+//       status = 403;
+//       message = "Token expired";
+//     } else if (err.name === "JsonWebTokenError") {
+//       status = 401;
+//       message = "Invalid token";
+//     }
+
+//     return res.status(status).json({ success: false, message });
+//   }
+// };
 
 module.exports = {
   registerController,

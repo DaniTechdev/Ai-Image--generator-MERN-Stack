@@ -47,6 +47,8 @@ const Header = () => {
     try {
       const user = await CHECK_AUTH();
       console.log("user credit", user.credit);
+      // console.log("user details", user);
+
       setActiveUser(user);
     } catch (error) {
       console.log(error);
@@ -55,6 +57,8 @@ const Header = () => {
 
   useEffect(() => {
     const storedCookieValue = Cookies.get("token");
+    console.log("storedCookiedValue header useeffect", storedCookieValue);
+
     if (storedCookieValue) {
       CALL_USER_DETAILS();
       setAuth(true);
@@ -140,7 +144,7 @@ const Header = () => {
               openSetting ? setOpenSetting(false) : setOpenSetting(true)
             }
           >
-            {activeUser?.username.slice(0, 1).toUpperCase()}
+            {activeUser?.username?.slice(0, 1).toUpperCase()}
           </button>
           {openSetting && <Setting activeUser={activeUser} />}
         </div>

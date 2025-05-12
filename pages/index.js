@@ -315,31 +315,33 @@ const index = () => {
             </div>
 
             <div className="mt-2">&nbsp;</div>
-            <div
-              className="active:outline-none focus:outline-none overflow-hidden
+            <div className="mt-3 relative px-2 md:px-7 w-full">
+              <div
+                className="active:outline-none focus:outline-none overflow-hidden
               new-css-style-box"
-              role="grid"
-              tabIndex="0"
-              style={{
-                position: "relative",
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-                listStyle: "none",
-                margin: 0,
-                padding: 0,
-                gap: "1rem",
-              }}
-            >
-              <>
-                {arrayRender.reverse().map((item, index) => (
-                  <ImageCard
-                    index={index}
-                    item={item}
-                    setSingleID={setSingleID}
-                    activeUser={activeUser}
-                  />
-                ))}
-              </>
+                role="grid"
+                tabIndex="0"
+                style={{
+                  position: "relative",
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                  listStyle: "none",
+                  margin: 0,
+                  padding: 0,
+                  gap: "1rem",
+                }}
+              >
+                <>
+                  {arrayRender.reverse().map((item, index) => (
+                    <ImageCard
+                      index={index}
+                      item={item}
+                      setSingleID={setSingleID}
+                      activeUser={activeUser}
+                    />
+                  ))}
+                </>
+              </div>
             </div>
           </div>
         </div>

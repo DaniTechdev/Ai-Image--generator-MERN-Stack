@@ -16,7 +16,7 @@ class CustomError extends Error {
 
     this.name = this.constructor.name;
     this.status = status;
-    Error.captureStackTrace(this.name, this.constructor);
+    Error.captureStackTrace(this, this.constructor);
   }
 }
 

@@ -92,7 +92,23 @@ export const CHECK_AUTH = async () => {
     url: "/api/auth/refetch",
 
     withCredentials: true,
+    // Add timeout to prevent hanging
+    timeout: 5000,
+    // Explicitly set headers
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
   });
+
+  // const response = await fetch("/api/auth/refetch", {
+  //   method: "GET",
+  //   credentials: "include", // Equivalent to withCredentials: true in Axios
+  //   headers: {
+  //     Accept: "application/json",
+  //     "Content-Type": "application/json",
+  //   },
+  // });
 
   let user;
 
