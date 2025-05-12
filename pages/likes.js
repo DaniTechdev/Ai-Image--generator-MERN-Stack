@@ -95,7 +95,7 @@ const likes = () => {
         const V3_1024x1792Temp = [];
 
         response.forEach((el) => {
-          if (el)
+          if (el.like.includes(user._id)) {
             if (el.aiModel === "AI Image Art Dall-e-v2") {
               if (el.size === "256x256") {
                 V2_256x256Temp.push(el);
@@ -113,6 +113,7 @@ const likes = () => {
                 V3_1024x1792Temp.push(el);
               }
             }
+          }
         });
 
         setV2_256x256(V2_256x256Temp);
