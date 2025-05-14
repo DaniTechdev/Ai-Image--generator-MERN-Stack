@@ -52,14 +52,14 @@ const index = () => {
   const [V2_512x512, setV2_512x512] = useState();
   const [V2_1024x1024, setV2_1024x1024] = useState();
 
-  const [prompv3, setPrompv3] = useState({
+  const [promptv3, setPromptv3] = useState({
     prompt: "",
     nagativePrompt: "",
     size: "1024x1024",
     style: "vivid",
   });
 
-  const [prompv2, setPrompv2] = useState({
+  const [promptv2, setPromptv2] = useState({
     prompt: "",
     nagativePrompt: "",
     size: "256x256",
@@ -67,7 +67,7 @@ const index = () => {
   });
 
   useEffect(() => {
-    var value = localStorage.getItem("ACTIVE_MODEL");
+    var value = localStorage.getItem("Active_MODEL");
 
     if (value) {
       setActiveModel(value);
@@ -116,11 +116,9 @@ const index = () => {
     if (model == "AI Image Art Dall-e-v2") {
       if (category == "Reel") {
         setAllAIImages(V2_256x256);
-        setAllPostCopy(V2_256x256);
         setCategory("Reel");
       } else if (category == "Instagram") {
         setAllAIImages(V2_512x512);
-        setAllPostCopy(V2_512x512);
         setCategory("Instagram");
       } else if (category == "YouTube") {
         setAllAIImages(V2_1024x1024);
@@ -130,15 +128,12 @@ const index = () => {
     } else {
       if (category == "Reel") {
         setAllAIImages(V3_1024x1792);
-        setAllPostCopy(V3_1024x1792);
         setCategory("Reel");
       } else if (category == "Instagram") {
         setAllAIImages(V3_1024x1024);
-        setAllPostCopy(V3_1024x1024);
         setCategory("Instagram");
       } else if (category == "YouTube") {
         setAllAIImages(V3_1792x1024);
-        setAllPostCopy(V3_1792x1024);
         setCategory("YouTube");
       }
     }
@@ -191,10 +186,8 @@ const index = () => {
 
       if (model == "AI Image Art Dall-e-v2") {
         setAllAIImages(V2_256x256Temp);
-        setAllPostCopy(V2_256x256Temp);
       } else {
         setAllAIImages(V3_1024x1024Temp);
-        setAllPostCopy(V3_1024x1792Temp);
       }
 
       const storedCookiedValue = Cookies.get("token");
@@ -235,24 +228,24 @@ const index = () => {
                 {/* PART 1 */}
                 <div className="w-full flex flex-col-reverse md:flex-row">
                   <Prompt
-                    promptv3={prompv3}
-                    setPrompv3={setPrompv3}
-                    promptv2={prompv2}
-                    setPrompv2={setPrompv2}
+                    promptv3={promptv3}
+                    setPromptv3={setPromptv3}
+                    promptv2={promptv2}
+                    setPromptv2={setPromptv2}
                     loader={loader}
                     error={error}
                     activeUser={activeUser}
                     generateFunction={() =>
                       activeModel == "Ai Image Art Dall-e-v3"
-                        ? CLICK_V3(prompv3)
-                        : CLICK_V2(prompv2)
+                        ? CLICK_V3(promptv3)
+                        : CLICK_V2(promptv2)
                     }
                   />
                   <PromptInput
-                    promptv3={prompv3}
-                    setPrompv3={setPrompv3}
-                    promptv2={prompv2}
-                    setPrompv2={setPrompv2}
+                    promptv3={promptv3}
+                    setPromptv3={setPromptv3}
+                    promptv2={promptv2}
+                    setPromptv2={setPromptv2}
                     activeModel={activeModel}
                     setActiveModel={setActiveModel}
                     activeUser={activeUser}
@@ -271,49 +264,8 @@ const index = () => {
                 </div>
                 <Subscription activeUser={activeUser} />
               </div>
-
-              <div className="flex  justify-center">
-                <button
-                  onClick={() =>
-                    openFilter ? setOpenFilter(false) : setOpenFilter(true)
-                  }
-                  type="button"
-                  className="ml-2 h-10 w-10 rounded-full cursor-pointer flex items-center
-                   justify-center bg-transparent hover:bg-zinc-900"
-                >
-                  <Filter />
-                </button>
-              </div>
             </div>
-            <div
-              className="flex w-full max-w-[600px] md:ml-[48px] px-4 pl-4 md:px-5 bg-yellow-100 "
-              style={{
-                position: "relative",
-              }}
-            />
-            {openFilter && <Notic />}
-
-            <div className="mb-8 flex flex-col items-center">
-              <div className="flex space-x-2">
-                <button
-                  className="w-32 sm:w-36 flex items-center text-xs justify-center text-center h-9 rounded-full hover:brightness-110
-                  bg-opacity-0 shadow-sm mt-4 bg-gradient-to-t from-indigo-900 via-indigo-900 to-indigo-800"
-                >
-                  Search
-                </button>
-                <a href="/aperture">
-                  <button
-                    className="w-32 sm:w-36 flex items-center text-xs 
-                      justify-center text-center h-9 rounded-full
-                     hover:brightness-110
-                     bg-opacity-0 shadow-sm mt-4 border border-gray-700 hover:bg-zinc-700"
-                  >
-                    Generate
-                  </button>
-                </a>
-              </div>
-            </div>
-
+            {/* BODY */}
             <div className="flex space-x-2 px-2">
               <Button
                 icon={<BsCameraReelsFill />}
@@ -336,36 +288,6 @@ const index = () => {
                 category={category}
               />
             </div>
-
-            <div className="mt-2">&nbsp;</div>
-            <div className="mt-3 relative px-2 md:px-7 w-full">
-              <div
-                className="active:outline-none focus:outline-none overflow-hidden
-              new-css-style-box"
-                role="grid"
-                tabIndex="0"
-                style={{
-                  position: "relative",
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-                  listStyle: "none",
-                  margin: 0,
-                  padding: 0,
-                  gap: "1rem",
-                }}
-              >
-                <>
-                  {arrayRender.reverse().map((item, index) => (
-                    <ImageCard
-                      index={index}
-                      item={item}
-                      setSingleID={setSingleID}
-                      activeUser={activeUser}
-                    />
-                  ))}
-                </>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -374,7 +296,7 @@ const index = () => {
         <SingleImage setSingleID={setSingleID} singleID={singleID} />
       )}
 
-      {buying && <PaymentProssing buying={buying} setBuying={setBuying} />}
+      {loader && <AIProcessing />}
     </div>
   );
 };

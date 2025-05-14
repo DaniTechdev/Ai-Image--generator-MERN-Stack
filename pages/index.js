@@ -67,7 +67,7 @@ const index = () => {
   }, [query.CREDIT_PLAN]);
 
   const changeCategory = (category) => {
-    const model = localStorage.getItem("ACTIVE_MODEL");
+    const model = localStorage.getItem("Active_MODEL");
 
     if (model == "AI Image Art Dall-e-v2") {
       if (category == "Reel") {
@@ -143,7 +143,7 @@ const index = () => {
       setV3_1024x1792(V3_1024x1792Temp);
       setV3_1792x1024(V3_1792x1024Temp);
 
-      const model = localStorage.getItem("ACTIVE_MODEL");
+      const model = localStorage.getItem("Active_MODEL");
 
       if (model == "AI Image Art Dall-e-v2") {
         setAllAIImages(V2_256x256Temp);
