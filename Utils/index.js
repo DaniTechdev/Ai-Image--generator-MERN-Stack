@@ -282,6 +282,8 @@ export const GET_AI_IMAGES = async () => {
 };
 
 export const GET_USER_AI_IMAGES = async (userId) => {
+  console.log("user id", userId);
+
   const response = await axios({
     method: "GET",
     url: `/api/post/user/${userId}`,

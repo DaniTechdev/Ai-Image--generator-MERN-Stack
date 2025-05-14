@@ -174,7 +174,11 @@ const getSinglePostController = async (req, res, next) => {
 };
 
 const getUserPostsController = async (req, res, next) => {
+  console.log("req.param from getUserPostController", req.params);
+
   const { userId } = req.params;
+
+  console.log("userid from getUser Controller", userId);
 
   try {
     const user = await User.findById(userId);
@@ -185,8 +189,8 @@ const getUserPostsController = async (req, res, next) => {
 
     // const post = await Post.find({ user: userId }).populate("user", "username");
     const userPosts = await Post.find({ user: userId }).populate({
-      path: user,
-      select: username,
+      path: "user",
+      select: "username",
     });
 
     res.status(200).json({ posts: userPosts });

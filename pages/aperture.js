@@ -141,64 +141,67 @@ const index = () => {
 
   const CALLING_ALL_POST = async () => {
     try {
-      const response = await GET_AI_IMAGES();
-
-      console.log("all images response", response);
-      console.log(response);
-
-      const V2_256x256Temp = [];
-      const V2_512x512Temp = [];
-      const V2_1024x1024Temp = [];
-
-      const V3_1024x1024Temp = [];
-      const V3_1792x1024Temp = [];
-      const V3_1024x1792Temp = [];
-
-      response.forEach((el) => {
-        if (el.aiModel === "AI Image Art Dall-e-v2") {
-          if (el.size === "256x256") {
-            V2_256x256Temp.push(el);
-          } else if (el.size === "512x512") {
-            V2_512x512Temp.push(el);
-          } else if (el.size === "1024x1024") {
-            V2_1024x1024Temp.push(el);
-          }
-        } else if (el.aiModel === "AI Image Art Dall-e-v2") {
-          if (el.size === "1024x1024") {
-            V3_1024x1024Temp.push(el);
-          } else if (el.size === "1792x1024") {
-            V3_1792x1024Temp.push(el);
-          } else if (el.size === "1024x1792") {
-            V3_1024x1792Temp.push(el);
-          }
-        }
-      });
-
-      setV2_256x256(V2_256x256Temp);
-      setV2_512x512(V2_512x512Temp);
-      setV2_1024x1024(V2_1024x1024Temp);
-
-      setV3_1024x1024(V3_1024x1024Temp);
-      setV3_1024x1792(V3_1024x1792Temp);
-      setV3_1792x1024(V3_1792x1024Temp);
-
-      const model = localStorage.getItem("ACTIVE_MODEL");
-
-      if (model == "AI Image Art Dall-e-v2") {
-        setAllAIImages(V2_256x256Temp);
-      } else {
-        setAllAIImages(V3_1024x1024Temp);
-      }
-
       const storedCookiedValue = Cookies.get("token");
 
       if (storedCookiedValue) {
         const user = await CHECK_AUTH();
         setActiveUser(user);
-      }
 
-      console.log(response);
-      console.log("all images response", response);
+        console.log("user aperture", user);
+        console.log("user id", user._id);
+
+        const response = await GET_USER_AI_IMAGES(user?._id);
+
+        console.log("all images response", response);
+        console.log(response);
+
+        const V2_256x256Temp = [];
+        const V2_512x512Temp = [];
+        const V2_1024x1024Temp = [];
+
+        const V3_1024x1024Temp = [];
+        const V3_1792x1024Temp = [];
+        const V3_1024x1792Temp = [];
+
+        response.forEach((el) => {
+          if (el.aiModel === "AI Image Art Dall-e-v2") {
+            if (el.size === "256x256") {
+              V2_256x256Temp.push(el);
+            } else if (el.size === "512x512") {
+              V2_512x512Temp.push(el);
+            } else if (el.size === "1024x1024") {
+              V2_1024x1024Temp.push(el);
+            }
+          } else if (el.aiModel === "AI Image Art Dall-e-v2") {
+            if (el.size === "1024x1024") {
+              V3_1024x1024Temp.push(el);
+            } else if (el.size === "1792x1024") {
+              V3_1792x1024Temp.push(el);
+            } else if (el.size === "1024x1792") {
+              V3_1024x1792Temp.push(el);
+            }
+          }
+        });
+
+        setV2_256x256(V2_256x256Temp);
+        setV2_512x512(V2_512x512Temp);
+        setV2_1024x1024(V2_1024x1024Temp);
+
+        setV3_1024x1024(V3_1024x1024Temp);
+        setV3_1024x1792(V3_1024x1792Temp);
+        setV3_1792x1024(V3_1792x1024Temp);
+
+        const model = localStorage.getItem("ACTIVE_MODEL");
+
+        if (model == "AI Image Art Dall-e-v2") {
+          setAllAIImages(V2_256x256Temp);
+        } else {
+          setAllAIImages(V3_1024x1024Temp);
+        }
+
+        console.log(response);
+        console.log("all images response", response);
+      }
     } catch (error) {
       console.log(error);
     }
