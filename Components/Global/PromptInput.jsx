@@ -119,6 +119,32 @@ const PromptInput = ({
               </div>
             </>
           )}
+
+          {activeModel == "AI Image Dall-e-v2" ? (
+            <ActiveModel
+              activeModel={activeModel}
+              size1="256x256"
+              size2="512x512"
+              size3="1024x1024"
+              updateState={setPromptv2}
+              value={promptv2}
+              aaddClass={AISizeStyleV2}
+              updateClass={setAISizeStyleV2}
+            />
+          ) : (
+            <ActiveModel
+              activeModel={activeModel}
+              size1="1024x1024"
+              size2="1792x1024"
+              size3="1024x1792"
+              updateState={setPromptv3}
+              value={promptv3}
+              aaddClass={AISizeStyleV3}
+              updateClass={setAISizeStyleV3}
+            />
+          )}
+
+          <FastSlow />
         </div>
       </div>
     </div>
