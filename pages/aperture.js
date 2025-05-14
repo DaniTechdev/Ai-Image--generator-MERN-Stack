@@ -299,7 +299,7 @@ const index = () => {
         <SingleImage setSingleID={setSingleID} singleID={singleID} />
       )}
 
-      {loader && <AIProcessing />}
+      {!loader && <AIProcessing />}
     </div>
   );
 };
