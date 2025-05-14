@@ -128,7 +128,7 @@ const PromptInput = ({
               size3="1024x1024"
               updateState={setPromptv2}
               value={promptv2}
-              aaddClass={AISizeStyleV2}
+              addClass={AISizeStyleV2}
               updateClass={setAISizeStyleV2}
             />
           ) : (
@@ -139,8 +139,10 @@ const PromptInput = ({
               size3="1024x1792"
               updateState={setPromptv3}
               value={promptv3}
-              aaddClass={AISizeStyleV3}
+              addClass={AISizeStyleV3}
               updateClass={setAISizeStyleV3}
+              setv3Style={setv3Style}
+              v3Style={v3Style}
             />
           )}
 
