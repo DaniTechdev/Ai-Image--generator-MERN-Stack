@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import OpenAi from "openai";
 import axios from "axios";
-import Replicate from "replicate";
 
-const replicate = new Replicate({
-  auth: process.env.REPLICATE_API_TOKEN,
-});
 
 //getting open endpoint
 
@@ -186,60 +182,41 @@ export const IMAGE_GENERATOR_V3 = async (promptv3) => {
     return "Data is missing";
   }
 
-  // const LOWERCASE = style.toLowerCase();
+  const LOWERCASE = style.toLowerCase();
 
-  const input = {
-    prompt:
-      'black forest gateau cake spelling out the words "FLUX SCHNELL", tasty, food photography, dynamic shot',
-    // prompt: `${prompt} "FLUX SCHNELL",${negativePrompt}`,
-    go_fast: true,
-    megapixels: "1",
-    num_outputs: 1,
-    aspect_ratio: "1:1",
-    output_format: "webp",
-    output_quality: 80,
-    num_inference_steps: 4,
-  };
-
-  const output = await replicate.run("black-forest-labs/flux-schnell", {
-    input,
-  });
-
-  console.log("image generated", output);
+  
 
   // To access the file URL:
-  console.log("image generated url", output[0].url()); //=> "http://example.com"
 
   // To write the file to disk:
-  fs.writeFile("my-image.png", output[0]);
 
-  // const AIImaage = await OpenAi.images.generate({
-  //   model: "dall-e-3",
-  //   prompt: prompt,
-  //   size: size,
-  //   quality: "hd",
-  //   n: 1,
-  //   style: LOWERCASE,
-  // });
+  const AIImaage = await OpenAi.images.generate({
+    model: "dall-e-3",
+    prompt: prompt,
+    size: size,
+    quality: "hd",
+    n: 1,
+    style: LOWERCASE,
+  });
 
-  // console.log("openai AIImaage ", AIImaage);
+  console.log("openai AIImaage ", AIImaage);
 
   //check if the OpenAai generated the image and then pick the first image in the array and its url and pass to the backened
 
-  // if (AIImaage.data[0].url) {
-  //   const response = await axios({
-  //     method: "POST",
-  //     url: `/api/post/create/v3/${currentUser._id}`,
-  //     withCredentials: true,
-  //     data: {
-  //       prompt,
-  //       negativePrompt: negativePrompt,
-  //       revisedPrompt: AIImaage.data[0].revised_prompt,
-  //       size,
-  //       style,
-  //       imageURL: AIImaage.data[0].url,
-  //     },
-  //   });
+  if (AIImaage.data[0].url) {
+    const response = await axios({
+      method: "POST",
+      url: `/api/post/create/v3/${currentUser._id}`,
+      withCredentials: true,
+      data: {
+        prompt,
+        negativePrompt: negativePrompt,
+        revisedPrompt: AIImaage.data[0].revised_prompt,
+        size,
+        style,
+        imageURL: AIImaage.data[0].url,
+      },
+    });
 
   if (output[0].url) {
     const response = await axios({
