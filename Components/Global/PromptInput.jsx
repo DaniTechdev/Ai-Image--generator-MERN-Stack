@@ -12,7 +12,7 @@ const PromptInput = ({
   setActiveModel,
   activeUser,
 }) => {
-  console.log("activeModel", activeModel);
+  // console.log("activeModel", activeModel);
 
   const [rangeValue, setRangeValue] = useState(3);
   const [v3Style, setv3Style] = useState("vivid");

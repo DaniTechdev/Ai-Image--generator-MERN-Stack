@@ -59,6 +59,8 @@ const index = () => {
     style: "vivid",
   });
 
+  // console.log("promptv3 ", promptv3);
+
   const [promptv2, setPromptv2] = useState({
     prompt: "",
     nagativePrompt: "",
@@ -69,14 +71,21 @@ const index = () => {
   useEffect(() => {
     var value = localStorage.getItem("Active_MODEL");
 
+    console.log("activeModel aperture", value);
+
     if (value) {
       setActiveModel(value);
     }
   }, [activeModel]);
 
   const CLICK_V3 = async (promptv3) => {
+    console.log("v3 generate clicked");
+
     try {
       setloader(true);
+
+      console.log("promptv3 aperture", promptv3);
+
       const response = await IMAGE_GENERATOR_V3(promptv3);
       if (response == "Data is missing") {
         setError(response);
@@ -93,6 +102,8 @@ const index = () => {
   };
 
   const CLICK_V2 = async (promptv2) => {
+    console.log("v2 generate clicked");
+
     try {
       setloader(true);
       const response = await IMAGE_GENERATOR_V2(promptv2);
@@ -111,7 +122,7 @@ const index = () => {
   };
 
   const changeCategory = (category) => {
-    const model = localStorage.getItem("ACTIVE_MODEL");
+    const model = localStorage.getItem("Active_MODEL");
 
     if (model == "AI Image Art Dall-e-v2") {
       if (category == "Reel") {
@@ -239,7 +250,7 @@ const index = () => {
                     error={error}
                     activeUser={activeUser}
                     generateFunction={() =>
-                      activeModel == "Ai Image Art Dall-e-v3"
+                      activeModel == "AI Image Dall-e-v3"
                         ? CLICK_V3(promptv3)
                         : CLICK_V2(promptv2)
                     }
@@ -299,7 +310,7 @@ const index = () => {
         <SingleImage setSingleID={setSingleID} singleID={singleID} />
       )}
 
-      {!loader && <AIProcessing />}
+      {loader && <AIProcessing />}
     </div>
   );
 };

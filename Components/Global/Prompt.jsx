@@ -15,6 +15,7 @@ const Prompt = ({
   const reload = () => {
     window.location.reload();
   };
+
   return (
     <div className="flex-1 min-w-0">
       <div

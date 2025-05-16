@@ -57,7 +57,7 @@ const Header = () => {
 
   useEffect(() => {
     const storedCookieValue = Cookies.get("token");
-    console.log("storedCookiedValue header useeffect", storedCookieValue);
+    // console.log("storedCookiedValue header useeffect", storedCookieValue);
 
     if (storedCookieValue) {
       CALL_USER_DETAILS();
